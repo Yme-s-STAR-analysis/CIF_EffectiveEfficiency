@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="200" simulateSubmission="false">
+  <shell>singularity exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif</shell>
+  <command>
+    starver pro
+    setup 64bits
+    <!-- Run the Root Macro with the options above -->
+    set nEvents = 99999999    <!-- Number of events to run over. -->
+
+    root4star -l -b -q makeFDst.C\($nEvents,\"$FILELIST\",\"$SCRATCH/\",\"$JOBID\",\"&ENGTAG;\"\) &gt;&amp; ${JOBID}.log
+
+  </command>
+  
+  <SandBox installer="ZIP">
+    <Package name="libZip">
+      <File>file:./makeFDst.C</File>
+      <File>file:./StRoot</File>
+      <File>file:./.sl73_x8664_gcc485</File>
+    </Package>
+  </SandBox>
+
+  <stdout URL="file:TARGET/log/$JOBID.log" />
+  <stderr URL="file:TARGET/err/$JOBID.err" />
+
+  <Generator>
+    <Location>TARGET/report/</Location>
+    <ScriptLocation>TARGET/csh/</ScriptLocation>
+    <ListLocation>TARGET/list/</ListLocation>
+  </Generator>
+
+  <input URL="filelist:FLIST" />
+  <output fromScratch="*.root" toURL="file:TARGET/out/" />
+  <output fromScratch="*.log" toURL="file:TARGET/log/" />
+
+</job>
