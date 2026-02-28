@@ -308,6 +308,7 @@ Int_t DstMaker::Make() {
             eff = eff > 1.0 ? 1.0 : eff;
             eff = eff < 0.0 ? 0.0 : eff;
 
+			if (eff == 0) { continue; }
 			if (positive) {
 				hPro[cut.tag]->Fill(fabs(YP), 1.0/eff);
 			} else {
