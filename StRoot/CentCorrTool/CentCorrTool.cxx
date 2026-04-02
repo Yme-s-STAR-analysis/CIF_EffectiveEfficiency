@@ -89,7 +89,7 @@ void BES2Processing::CentCorrTool::InitParams(const std::string& energy) {
     }
     std::map<std::string, std::vector<int>> dieMap_CEA = {
         {"7", {414, 369, 329, 294, 263, 236, 212, 190, 170, 152, 136, 121, 108, 96, 85, 76, 67, 59, 51, 45, 39, 34, 29, 25}}, // 24-bin is only activated for 7 GeV
-        // {"9", {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+        {"9", {520, 471, 428, 390, 354, 323, 294, 267, 242, 219, 198, 179, 161, 144, 129, 115, 103, 91, 80, 70, 62, 54, 47, 40}}, // Apr 2, 2026: update 24 bin centralities for 9.2 GeV
         // {"11", {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
         // {"14", {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
         // {"17", {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
@@ -122,7 +122,7 @@ int BES2Processing::CentCorrTool::GetCentralityClass9(int ref3) {
 
 int BES2Processing::CentCorrTool::GetCentralityClass24(int ref3) {
     for (int i=0; i<24; i++) {
-        if (ref3 > centSplitEdge[i]) {
+        if (ref3 > centSplitEdgeAlter[i]) {
             return i;
         }
     }
