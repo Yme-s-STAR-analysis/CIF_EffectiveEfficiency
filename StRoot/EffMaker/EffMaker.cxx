@@ -49,7 +49,7 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
     TFile* tf_pid = 0;
     if (strcmp(tpc, "none")) { // true for IS DIFFERENT
 	    std::cout << "[LOG] - From EffMaker Module: TPC Efficiency root file path: " << tpc << ".\n";
-        tf_tpc = TFile::Open(tpc);
+        tf_tpc = new TFile(tpc, "read");
         tpcOff = false;
     } else {
 	    std::cout << "[LOG] - From EffMaker Module: TPC Efficiency OFF.\n";
@@ -57,7 +57,7 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
     }
     if (strcmp(tof, "none")) { // true for IS DIFFERENT
 	    std::cout << "[LOG] - From EffMaker Module: TOF Efficiency root file path: " << tof << ".\n";
-        tf_tof = TFile::Open(tof);
+        tf_tof = new TFile(tof, "read");
         tofOff = false;
     } else {
 	    std::cout << "[LOG] - From EffMaker Module: TOF Efficiency OFF.\n";
@@ -65,7 +65,7 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
     }
     if (strcmp(pid, "none")) { // true for IS DIFFERENT
         std::cout << "[LOG] - From EffMaker Module: PID Efficiency root file path: " << pid << " with nSigma Tag: " << nSigTag << ".\n";
-        tf_pid = TFile::Open(pid);
+        tf_pid = new TFile(pid, "read");
         pidOff = false;
     } else {
 	    std::cout << "[LOG] - From EffMaker Module: PID Efficiency OFF.\n";
@@ -76,7 +76,7 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
         for (int iCent=0; iCent<nCent; iCent++) {
             if (energy == "27") { if (iVz > 2) { continue; } }
             if (!tpcOff) {
-                if (energy != "9.2") {
+                if (energy != "9") {
                     tf_tpc->GetObject(
                         Form("TpcEff_cent%d_vz%d_Pro_%s", iCent, iVz, sysTagReal.c_str()),
                         tpc_pro[iCent][iVz][0]
@@ -89,7 +89,7 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
                 } else { // for 9.2 GeV, we have 2 regions using different TPC tracking efficiency
                     tf_tpc->GetObject(
                         Form("TpcEff_cent%d_vz%d_Pro_%s_0", iCent, iVz, sysTagReal.c_str()),
-                        tpc_pbar[iCent][iVz][0]
+                        tpc_pro[iCent][iVz][0]
                     );
                     tf_tpc->GetObject(
                         Form("TpcEff_cent%d_vz%d_Pbar_%s_0", iCent, iVz, sysTagReal.c_str()),
@@ -108,11 +108,11 @@ void EffMaker::ReadInEffFile(const char* tpc, const char* tof, const char* pid, 
             if (!tofOff) {
                 tf_tof->GetObject(
                     Form("TofEff_cent%d_vz%d_Pro_%s", iCent, iVz, sysTagReal.c_str()),
-                    tof_pro[iCent][iVz][0]
+                    tof_pro[iCent][iVz]
                 );
                 tf_tof->GetObject(
                     Form("TofEff_cent%d_vz%d_Pbar_%s", iCent, iVz, sysTagReal.c_str()),
-                    tof_pbar[iCent][iVz][0]
+                    tof_pbar[iCent][iVz]
                 );
             }
         }
@@ -152,9 +152,9 @@ double EffMaker::GetTofEff(bool positive, double pt, double y, int cent, double 
     if (vz < 0) { return -1; }
     double eff = -1;
     if (positive) {
-        eff = tof_pro[cent][vz][region]->Interpolate(y, pt);
+        eff = tof_pro[cent][vz]->Interpolate(y, pt);
     } else {
-        eff = tof_pbar[cent][vz][region]->Interpolate(y, pt);
+        eff = tof_pbar[cent][vz]->Interpolate(y, pt);
     }
     if (eff < 0 || eff > 1) { return -1; }
     return eff;

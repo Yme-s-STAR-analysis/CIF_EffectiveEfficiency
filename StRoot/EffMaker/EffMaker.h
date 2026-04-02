@@ -21,8 +21,8 @@ class EffMaker{
         TH2F* pid_pbar;
         TH2F* tpc_pro[nCent][nVz][nRegion];
         TH2F* tpc_pbar[nCent][nVz][nRegion];
-        TH2F* tof_pro[nCent][nVz][nRegion];
-        TH2F* tof_pbar[nCent][nVz][nRegion];
+        TH2F* tof_pro[nCent][nVz];
+        TH2F* tof_pbar[nCent][nVz];
 
         TH2F* h2; // will be used multiple times
 
